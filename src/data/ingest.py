@@ -10,6 +10,13 @@ def build_incident_features(raw_csv_path: str) -> pl.DataFrame:
         'CountryCode', 'State', 'City'
     ]
 
+    threat_categories = [
+        'InitialAccess', 'Exfiltration', 'CommandAndControl', 'Execution', 
+        'SuspiciousActivity', 'Impact', 'Collection', 'CredentialAccess', 
+        'Persistence', 'Discovery', 'Malware', 'DefenseEvasion', 'Exploit', 
+        'PrivilegeEscalation', 'LateralMovement', 'Ransomware', 
+        'UnwantedSoftware', 'CredentialStealing'
+    ]
     lf = pl.scan_csv(raw_csv_path, ignore_errors=True)
 
     # Cast timestamp
@@ -17,13 +24,14 @@ def build_incident_features(raw_csv_path: str) -> pl.DataFrame:
         pl.col("Timestamp").str.to_datetime(format="%Y-%m-%dT%H:%M:%S.%fZ", strict=False)
     )
 
+
     # Define base aggregations
     aggs = [
         pl.col("OrgId").first(),
         pl.col("IncidentGrade").first(),
         (pl.col("Timestamp").max() - pl.col("Timestamp").min()).dt.total_seconds().alias("incident_duration_seconds")
     ]
-    
+   
     # Add unique counts
     aggs.extend([
         pl.col(f).n_unique().alias(f"unique_{f.lower()}_count") for f in features_to_count
@@ -32,6 +40,15 @@ def build_incident_features(raw_csv_path: str) -> pl.DataFrame:
     # calculate velocity
     aggs.append(pl.len().alias("total_evidence_count"))
 
+    aggs.extend([
+        (pl.col('Category') == cat).any().cast(pl.Int32).alias(f"cat_{cat}") for cat in threat_categories
+    ])
+
+    aggs.extend([
+               pl.col('AlertTitle').drop_nulls().unique().str.join(" ").alias('text_AlertTitle'),
+               pl.col('FileName').drop_nulls().unique().str.join(" ").alias("text_FileName")
+           ])
+        
     # Execute Groupby
     print("Executing lazy query plan across the dataset...")
     df_features = lf.group_by("IncidentId").agg(aggs)
@@ -62,5 +79,5 @@ if __name__ == "__main__":
     final_df = build_incident_features(file_path)
     
     print(f"Final dataset shape: {final_df.shape}")
-    final_df.write_parquet("../../data/03_processed/engineered_features_train.parquet")
-    print("Saved to data/03_processed/engineered_features_train.parquet")
+    final_df.write_parquet("../../data/03_processed/version_two_engineered_features_train.parquet")
+    print("Saved to data/03_processed/version_two_engineered_features_train.parquet")
