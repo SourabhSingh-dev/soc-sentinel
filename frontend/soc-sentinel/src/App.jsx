@@ -27,7 +27,12 @@ function App() {
 
     try {
       const parsedPayload = JSON.parse(payload);
-      const response = await axios.post('http://localhost:8000/triage', parsedPayload);
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      const response = await axios.post(
+          `${API_URL}/triage`,
+          parsedPayload
+      );
       setResults(response.data.triage_queue);
     } catch (err) {
       if (err instanceof SyntaxError) {
