@@ -10,6 +10,15 @@ It combines **large-scale feature engineering, sparse text representation, XGBoo
 
 ---
 
+## Live Demo
+
+**Live Dashboard:** https://soc-sentinel-frontend.onrender.com/
+
+**Backend API:** https://soc-sentinel-vlb1.onrender.com/docs
+
+> The dashboard is connected to the deployed FastAPI inference service and can execute the complete threat-triage pipeline on submitted SOC telemetry.
+
+
 ## The Problem
 
 A SOC can generate far more security events than an analyst can investigate individually.
@@ -21,14 +30,6 @@ SOC Sentinel treats the problem as **threat prioritization**, rather than simply
 This makes ranking quality and top-of-queue performance more important than accuracy alone.
 
 ---
-## Live Demo
-
-**Live Dashboard:** https://soc-sentinel-frontend.onrender.com/
-
-**Backend API:** https://soc-sentinel-vlb1.onrender.com/docs
-
-> The dashboard is connected to the deployed FastAPI inference service and can execute the complete threat-triage pipeline on submitted SOC telemetry.
-
 
 ## What I Built
 
