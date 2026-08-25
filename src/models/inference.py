@@ -4,9 +4,7 @@ import scipy.sparse as sp
 import polars as pl
 import shap
 import json
-
-def space_tokenizer(x):
-    return str(x).split()
+from src.models.utils import space_tokenizer
 
 class ThreatTriageEngine:
     def __init__(self,model_dir : str):

@@ -25,8 +25,7 @@ app.add_middleware(
     allow_headers=['*']
 )
 
-def space_tokenizer(x):
-    return str(x).split()
+
 
 engine = None
 
