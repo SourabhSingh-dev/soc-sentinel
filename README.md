@@ -185,7 +185,6 @@ Some alert/file text is intentionally obfuscated by the dataset provider, so tho
 
 ## Dashboard
 
-![SOC Sentinel Dashboard](dashboard.png)
 
 The React dashboard provides:
 
